@@ -93,3 +93,9 @@ SRR8544157_2.fastq.gz                     FASTQ   DNA   1,323,724  196,602,628  
 SRR8544173_1.fastq.gz                     FASTQ   DNA   1,516,384  226,176,882       35    149.2      151
 SRR8544173_2.fastq.gz                     FASTQ   DNA   1,516,384  226,192,730       35    149.2      151
 ```
+
+## Control de calidad de lecturas 
+
+```
+fastqc raw_data/*.fastq.gz -o results/fastqc
+```
