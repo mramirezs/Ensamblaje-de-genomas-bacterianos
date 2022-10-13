@@ -99,3 +99,10 @@ SRR8544173_2.fastq.gz                     FASTQ   DNA   1,516,384  226,192,730  
 ```
 fastqc raw_data/*.fastq.gz -o results/fastqc
 ```
+
+### Crear reporte de calidad de lecturas
+
+```
+cd results/fastqc
+multiqc .
+```
