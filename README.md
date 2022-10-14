@@ -3,7 +3,7 @@ Desde la obtención de las secuencias hasta el control de calidad del ensamblado
 
 
 ## Instructor 👨‍🏫  
-Manuel Alain Ramírez Sáenz --> Llámame `MARS`
+Manuel Alain Ramírez Sáenz --> Llámame `MaRS`
 
 ## Obtención de códigos SRA
 Para desarrollar el proyecto trabajaremos con un conjunto de códigos ya submitidos a la base de datos del SRA-NCBI
@@ -109,11 +109,8 @@ multiqc .
 
 ## Recorte de adaptadores y filtrado de calidad de lecturas
 
+Para muestras con patron L001_R1_001.fastq.gz
+
 ```
-for i in *_L001_R1_001.fastq.gz;
-do
-  SAMPLE=$(echo ${i} | sed "s/_L001_R1_001.fastq.gz//") 
-  echo ${SAMPLE}_L001_R1_001.fastq.gz ${SAMPLE}_L001_R2_001.fastq.gz
-  trimmomatic PE -threads 4 -phred33  ${SAMPLE}_L001_R1_001.fastq.gz ${SAMPLE}_L001_R2_001.fastq.gz /media/mars/ades/SARS_CoV_2/C061-20may2022/results/trimmomatic/${SAMPLE}_L001_R1_001.paired.fastq.gz /media/mars/ades/SARS_CoV_2/C061-20may2022/results/trimmomatic/${SAMPLE}_L001_R2_001.paired.fastq.gz /media/mars/ades/SARS_CoV_2/C061-20may2022/results/trimmomatic/${SAMPLE}_L001_R1_001.unpaired.fastq.gz /media/mars/ades/SARS_CoV_2/C061-20may2022/results/trimmomatic/${SAMPLE}_L001_R2_001.unpaired.fastq.gz ILLUMINACLIP:/media/mars/ades/Bioprograms/Trimmomatic-0.39/adapters/adapters.fasta:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:100 
-done
+for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do trimmomatic PE -threads 10 -phred33 ${i}_L001_R1_001.fastq.gz ${i}_L001_R2_001.fastq.gz ../results/trimmmomatic/${i}_L001_R1_001.paired.fastq.gz ../results/trimmmomatic/${i}_L001_R1_001.unpaired.fastq.gz ../results/trimmmomatic/${i}_L001_R2_001.paired.fastq.gz ../results/trimmmomatic/${i}_L001_R2_001.unpaired.fastq.gz ILLUMINACLIP:../adapters.fasta:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:50;done
 ```
