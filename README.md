@@ -106,3 +106,14 @@ fastqc raw_data/*.fastq.gz -o results/fastqc
 cd results/fastqc
 multiqc .
 ```
+
+## Recorte de adaptadores y filtrado de calidad de lecturas
+
+´´´
+for i in *_L001_R1_001.fastq.gz;
+do
+  SAMPLE=$(echo ${i} | sed "s/_L001_R1_001.fastq.gz//") 
+  echo ${SAMPLE}_L001_R1_001.fastq.gz ${SAMPLE}_L001_R2_001.fastq.gz
+  trimmomatic PE -threads 4 -phred33  ${SAMPLE}_L001_R1_001.fastq.gz ${SAMPLE}_L001_R2_001.fastq.gz /media/mars/ades/SARS_CoV_2/C061-20may2022/results/trimmomatic/${SAMPLE}_L001_R1_001.paired.fastq.gz /media/mars/ades/SARS_CoV_2/C061-20may2022/results/trimmomatic/${SAMPLE}_L001_R2_001.paired.fastq.gz /media/mars/ades/SARS_CoV_2/C061-20may2022/results/trimmomatic/${SAMPLE}_L001_R1_001.unpaired.fastq.gz /media/mars/ades/SARS_CoV_2/C061-20may2022/results/trimmomatic/${SAMPLE}_L001_R2_001.unpaired.fastq.gz ILLUMINACLIP:/media/mars/ades/Bioprograms/Trimmomatic-0.39/adapters/adapters.fasta:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:100 
+done
+´´´
