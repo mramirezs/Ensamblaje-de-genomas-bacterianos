@@ -120,3 +120,9 @@ Para muestrsas con patron 1.fastq.gz
 ```
 for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do trimmomatic PE -threads 10 -phred33 ${i}_1.fastq.gz ${i}_2.fastq.gz ../results/trimmmomatic/${i}_1.paired.fastq.gz ../results/trimmmomatic/${i}_1.unpaired.fastq.gz ../results/trimmmomatic/${i}_2.paired.fastq.gz ../results/trimmmomatic/${i}_2.unpaired.fastq.gz ILLUMINACLIP:../adapters.fasta:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:100;done
  ```
+
+## Identificación de especies 
+
+```
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do echo kraken2 --db /media/olimpo/96e671b0-3d95-4c39-8527-47c7eb9c8b7a1/Databases/k2_standard_20220926  --threads 16 --report kraken2/${i}.kreport --paired ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz ../results/trimmomatic/${i}_L001_R2_001.paired.fastq.gz --output ../results/kraken2/${i}.trimmed.krake2;done
+```
