@@ -126,5 +126,5 @@ for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do trimmomatic PE -threads 
 Para muestrsas con patron 1.fastq.gz
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do kraken2 --db /media/olimpo/96e671b0-3d95-4c39-8527-47c7eb9c8b7a1/Databases/k2_standard_20220926  --threads 16 --report ../results/kraken2/${i}.kreport --paired ../results/trimmomatic/${i}_1.paired.fastq.gz ../results/trimmomatic/${i}_2.paired.fastq.gz '>' ../results/kraken2/${i}.trimmed.kraken2;done 
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do kraken2 --db /media/olimpo/96e671b0-3d95-4c39-8527-47c7eb9c8b7a1/Databases/k2_standard_20220926  --threads 16 --report ../results/kraken2/${i}.kreport --paired ../results/trimmomatic/${i}_1.paired.fastq.gz ../results/trimmomatic/${i}_2.paired.fastq.gz > ../results/kraken2/${i}.trimmed.kraken2;done 
 ```
