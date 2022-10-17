@@ -162,9 +162,9 @@ for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do ktIm
 ## Ensamblaje de genoma
 
 ```
-for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do spades.py --careful -t 20 -o ../results/spades/${i} -1 ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz -2 ../results/trimmomatic/${i}_L001_R2_001.paired.fastq.gz
+for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do spades.py --careful -t 20 -o ../results/spades/${i} -1 ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz -2 ../results/trimmomatic/${i}_L001_R2_001.paired.fastq.gz;done
 ```
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do spades.py --careful -t 20 -o ../results/spades/${i} -1 ../results/trimmomatic/${i}_1.paired.fastq.gz -2 ../results/trimmomatic/${i}_2.paired.fastq.gz
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do spades.py --careful -t 20 -o ../results/spades/${i} -1 ../results/trimmomatic/${i}_1.paired.fastq.gz -2 ../results/trimmomatic/${i}_2.paired.fastq.gz; done
 ```
