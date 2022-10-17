@@ -128,3 +128,43 @@ Para muestrsas con patron 1.fastq.gz
 ```
 for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do kraken2 --db /media/olimpo/96e671b0-3d95-4c39-8527-47c7eb9c8b7a1/Databases/k2_standard_20220926  --threads 16 --report ../results/kraken2/${i}.kreport --paired ../results/trimmomatic/${i}_1.paired.fastq.gz ../results/trimmomatic/${i}_2.paired.fastq.gz > ../results/kraken2/${i}.trimmed.kraken2;done 
 ```
+
+Para muestras con patron L001_R1_001.fastq.gz
+
+```
+for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do kraken2 --db /media/olimpo/96e671b0-3d95-4c39-8527-47c7eb9c8b7a1/Databases/k2_standard_08gb_20220926  --threads 16 --report ../results/kraken2/${i}.kreport --paired ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz > ../results/kraken2/${i}.trimmed.kraken2;done
+
+```
+
+### Visualización de las especies identificadas
+
+```
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do cat ../results/kraken2/${i}.trimmed.kraken2 | cut -f 2,3 > ../results/kraken2/${i}.cut.trimmed.kraken2;done
+
+```
+
+```
+for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do cat ../results/kraken2/${i}.trimmed.kraken2 | cut -f 2,3 > ../results/kraken2/${i}.cut.trimmed.kraken2;done
+```
+
+
+#### Krona 
+
+```
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do ktImportTaxonomy -o ../results/krona/${i}.html ../results/kraken2/${i}.cut.trimmed.kraken2;done
+```
+
+
+```
+for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do ktImportTaxonomy -o ../results/krona/${i}.html ../results/kraken2/${i}.cut.trimmed.kraken2;done
+```
+
+## Ensamblaje de genoma
+
+```
+for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do spades.py --careful -t 20 -o ../results/spades/${i} -1 ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz -2 ../results/trimmomatic/${i}_L001_R2_001.paired.fastq.gz
+```
+
+```
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do spades.py --careful -t 20 -o ../results/spades/${i} -1 ../results/trimmomatic/${i}_1.paired.fastq.gz -2 ../results/trimmomatic/${i}_2.paired.fastq.gz
+```
