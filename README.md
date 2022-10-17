@@ -168,3 +168,39 @@ for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do spad
 ```
 for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do spades.py --careful -t 20 -o ../results/spades/${i} -1 ../results/trimmomatic/${i}_1.paired.fastq.gz -2 ../results/trimmomatic/${i}_2.paired.fastq.gz; done
 ```
+
+### Obtener secuencias de alta cobertura (cov >= 2, length >= 500)
+
+
+```
+for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do grep -F '>' ../results/spades//${i}/contigs.fasta | sed -e 's/_/ /g' | sort -nrk 6 | awk '$6>=2.0 && $4>=500 {print $0}' | sed -e 's/ /_/g' | sed -e 's/>//g' > ../results/spades/${i}.contigs.txt;done
+```
+
+```
+for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do fastagrep.pl -f ../results/spades/${i}.contigs.txt ../results/spades/${i}/contigs.fasta > ../results/spades/${i}.HCov.contigs.fasta;done
+```
+
+
+```
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do grep -F '>' ../results/spades//${i}/contigs.fasta | sed -e 's/_/ /g' | sort -nrk 6 | awk '$6>=2.0 && $4>=500 {print $0}' | sed -e 's/ /_/g' | sed -e 's/>//g' > ../results/spades/${i}.contigs.txt;done
+```
+
+```
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do fastagrep.pl -f ../results/spades/${i}.contigs.txt ../results/spades/${i}/contigs.fasta > ../results/spades/${i}.HCov.contigs.fasta;done
+```
+
+## Control de ensamblaje
+
+```
+for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//');do quast.py --circos --output-dir ../results/quast/${i}_ref -r ../reference/NC_011274.fasta -t 8 ../results/spades/${i}.HCov.contigs.fasta;done
+```
+
+```
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do quast.py --circos --output-dir ../results/quast/${i}_ref -r ../reference/NC_011274.fasta -t 8 ../results/spades/${i}.HCov.contigs.fasta;done
+```
+
+### Crear imagen con CIRCOS
+
+```
+for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do circos -conf ../results/quast/${i}_ref/circos.conf ;done
+```
