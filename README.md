@@ -106,6 +106,10 @@ fastqc raw_data/*.fastq.gz -o results/fastqc
 multiqc results/fastqc -o results/fastqc
 ```
 
+### Report Multiqc
+
+![Estadísticas generales](https://github.com/mramirezs/Ensamblaje-de-genomas-bacterianos/blob/main/fig/multiqc_general_statistics.png)
+
 ## Recorte de adaptadores y filtrado de calidad de lecturas
 
 Para muestras con patron L001_R1_001.fastq.gz
