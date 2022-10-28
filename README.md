@@ -106,7 +106,7 @@ fastqc raw_data/*.fastq.gz -o results/fastqc
 multiqc results/fastqc -o results/fastqc
 ```
 
-### Report Multiqc
+### Reporte Multiqc
 
 ![Estadísticas generales](https://github.com/mramirezs/Ensamblaje-de-genomas-bacterianos/blob/main/fig/multiqc_general_statistics.png)
 
