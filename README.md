@@ -103,7 +103,7 @@ fastqc raw_data/*.fastq.gz -o results/fastqc
 ### Crear reporte de calidad de lecturas
 
 ```
-multiqc results/fastqc
+multiqc results/fastqc -o results/fastqc
 ```
 
 ## Recorte de adaptadores y filtrado de calidad de lecturas
