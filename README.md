@@ -31,7 +31,7 @@ Para desarrollar el proyecto trabajaremos con un conjunto de códigos ya submiti
 ## Descargar archivos fastq usando for y fastq-dump
 
 ```
-for sra in $(cat sra_lit_SG_brasil.txt); do fastq-dump --split-list $sra; done
+for sra in $(cat sra_lit_SG_brasil.txt); do fastq-dump --split-files $sra; done
 ```
 
 ## Estadística de los archivos fastq.gz
