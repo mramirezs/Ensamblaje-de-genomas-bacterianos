@@ -1,5 +1,5 @@
 # Ensamblaje-de-genomas-bacterianos
-Desde la obtención de las secuencias hasta el control de calidad del ensamblado
+Desde la obtención de las secuencias crudas hasta el control de calidad del ensamblado
 
 
 ## Instructor 👨‍🏫  
@@ -31,16 +31,19 @@ Para desarrollar el proyecto trabajaremos con un conjunto de códigos ya submiti
 ## Descargar archivos fastq usando for y fastq-dump
 
 ```
-for file in $(cat sra_list_SG_brasil.txt); do fastq-dump --split-files $file; done
+mkdir raw_data
+cd raw_data
+for file in $(cat sra_list.txt); do fastq-dump --split-files $file; done
 ```
 
 ## Estadística de los archivos fastq.gz
 
 ```
-seqkit stat raw_data/*.gz
+cd raw_data
+seqkit stat *.fastq.gz # Usando el comando seqkit
 ```
 
-Resultado
+El resultado de esa linea de comandos es:
 
 ```
 file                                      format  type   num_seqs      sum_len  min_len  avg_len  max_len
@@ -94,6 +97,10 @@ SRR8544173_1.fastq.gz                     FASTQ   DNA   1,516,384  226,176,882  
 SRR8544173_2.fastq.gz                     FASTQ   DNA   1,516,384  226,192,730       35    149.2      151
 ```
 
+```
+cd .. # Regresamos a la carpeta de trabajo principal
+```
+
 ## Control de calidad de lecturas 
 
 ```
@@ -112,22 +119,23 @@ multiqc results/fastqc -o results/fastqc
 
 ## Recorte de adaptadores y filtrado de calidad de lecturas
 
-Para muestras con patron L001_R1_001.fastq.gz
+Para muestras con patron _L001_R1_001.fastq.gz, _L001_R2_001.fastq.gz:
 
 ```
-for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do trimmomatic PE -threads 10 -phred33 ${i}_L001_R1_001.fastq.gz ${i}_L001_R2_001.fastq.gz ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz ../results/trimmomatic/${i}_L001_R1_001.unpaired.fastq.gz ../results/trimmomatic/${i}_L001_R2_001.paired.fastq.gz ../results/trimmomatic/${i}_L001_R2_001.unpaired.fastq.gz ILLUMINACLIP:../adapters.fasta:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:50;done
+cd raw_data
+for file in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do trimmomatic PE -threads 10 -phred33 ${file}_L001_R1_001.fastq.gz ${file}_L001_R2_001.fastq.gz ../results/trimmomatic/${file}_L001_R1_001.paired.fastq.gz ../results/trimmomatic/${file}_L001_R1_001.unpaired.fastq.gz ../results/trimmomatic/${file}_L001_R2_001.paired.fastq.gz ../results/trimmomatic/${file}_L001_R2_001.unpaired.fastq.gz ILLUMINACLIP:../adapters.fasta:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:50;done
 ```
 
-Para muestrsas con patron 1.fastq.gz 
+Para muestrsas con patron _1.fastq.gz, _2.fastq.gz: 
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do trimmomatic PE -threads 10 -phred33 ${i}_1.fastq.gz ${i}_2.fastq.gz ../results/trimmomatic/${i}_1.paired.fastq.gz ../results/trimmomatic/${i}_1.unpaired.fastq.gz ../results/trimmomatic/${i}_2.paired.fastq.gz ../results/trimmomatic/${i}_2.unpaired.fastq.gz ILLUMINACLIP:../adapters.fasta:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50;done
+for file in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do trimmomatic PE -threads 10 -phred33 ${file}_1.fastq.gz ${file}_2.fastq.gz ../results/trimmomatic/${file}_1.paired.fastq.gz ../results/trimmomatic/${file}_1.unpaired.fastq.gz ../results/trimmomatic/${file}_2.paired.fastq.gz ../results/trimmomatic/${file}_2.unpaired.fastq.gz ILLUMINACLIP:../adapters.fasta:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50;done
  ```
 
 ### Revisar la estadìstica y calidad de lecturas de las lecturas trimadas
 
 ```
-seqkit stat results/trimmomatic/*.gz
+seqkit stat results/trimmomatic/*.fastq.gz
 ```
 
 Cuyo resultado es: 
@@ -138,86 +146,110 @@ Cuyo resultado es:
 
 De igual forma se realiza el anàlisis con fastqc y se obtiene su reporte por multiqc. 
 
+```
+mkdir trimmomatic/fastqc
+fastqc results/trimmomatic/*.fastq.gz -o results/trimmomatic/fastqc
+multiqc results/trimmomatic/fastqc -o results/trimmomatic/fastqc
+```
+
 ## Identificación de especies 
 
 Para muestrsas con patron 1.fastq.gz
 
 ```
-for i in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do kraken2 --db /media/olimpo/96e671b0-3d95-4c39-8527-47c7eb9c8b7a1/Databases/k2_standard_20220926  --threads 16 --report ../kraken2/${i}.kreport --paired ../trimmomatic/${i}_1.paired.fastq.gz ../trimmomatic/${i}_2.paired.fastq.gz > ../kraken2/${i}.trimmed.kraken2;done 
+for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//'); do kraken2 --db /media/olimpo/96e671b0-3d95-4c39-8527-47c7eb9c8b7a1/Databases/k2_standard_08gb_20220926  --threads 16 --report ../kraken2/${file}.kreport --paired ${file}_L001_R1_001.paired.fastq.gz ${file}_L001_R1_001.paired.fastq.gz > ../kraken2/${file}.trimmed.kraken2;done
 ```
 
 Para muestras con patron L001_R1_001.fastq.gz
 
 ```
-for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do kraken2 --db /media/olimpo/96e671b0-3d95-4c39-8527-47c7eb9c8b7a1/Databases/k2_standard_08gb_20220926  --threads 16 --report ../results/kraken2/${i}.kreport --paired ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz > ../results/kraken2/${i}.trimmed.kraken2;done
+for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do kraken2 --db /media/olimpo/96e671b0-3d95-4c39-8527-47c7eb9c8b7a1/Databases/k2_standard_20220926  --threads 16 --report ../kraken2/${file}.kreport --paired ${file}_1.paired.fastq.gz ${file}_2.paired.fastq.gz > ../kraken2/${file}.trimmed.kraken2;done 
 
 ```
 
 ### Visualización de las especies identificadas
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do cat ../results/kraken2/${i}.trimmed.kraken2 | cut -f 2,3 > ../results/kraken2/${i}.cut.trimmed.kraken2;done
-
+cd kraken2
+for file in $(ls *.kreport | sed 's/kreport//'); do cat ${file}.trimmed.kraken2 | cut -f 2,3 > ${file}.cut.trimmed.kraken2;done
 ```
-
-```
-for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do cat ../results/kraken2/${i}.trimmed.kraken2 | cut -f 2,3 > ../results/kraken2/${i}.cut.trimmed.kraken2;done
-```
-
 
 #### Krona 
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do ktImportTaxonomy -o ../results/krona/${i}.html ../results/kraken2/${i}.cut.trimmed.kraken2;done
-```
-
-
-```
-for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do ktImportTaxonomy -o ../results/krona/${i}.html ../results/kraken2/${i}.cut.trimmed.kraken2;done
+for file in $(ls *.kreport | sed 's/kreport//'); do ktImportTaxonomy -o ../krona/${file}.html ${file}.cut.trimmed.kraken2;done
 ```
 
 ## Ensamblaje de genoma
 
 ```
-for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do spades.py --careful -t 20 -o ../results/spades/${i} -1 ../results/trimmomatic/${i}_L001_R1_001.paired.fastq.gz -2 ../results/trimmomatic/${i}_L001_R2_001.paired.fastq.gz;done
+cd trimmmomatic
+for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//'); do spades.py --careful -t 20 -o ../spades/${file} -1 ${file}_L001_R1_001.paired.fastq.gz -2 ${file}_L001_R2_001.paired.fastq.gz;done
 ```
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do spades.py --careful -t 20 -o ../results/spades/${i} -1 ../results/trimmomatic/${i}_1.paired.fastq.gz -2 ../results/trimmomatic/${i}_2.paired.fastq.gz; done
+for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do spades.py --careful -t 20 -o ../spades/${file} -1 ${file}_1.paired.fastq.gz -2 ${file}_2.paired.fastq.gz;done
 ```
 
 ### Obtener secuencias de alta cobertura (cov >= 2, length >= 500)
 
 
 ```
-for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do grep -F '>' ../results/spades//${i}/contigs.fasta | sed -e 's/_/ /g' | sort -nrk 6 | awk '$6>=2.0 && $4>=500 {print $0}' | sed -e 's/ /_/g' | sed -e 's/>//g' > ../results/spades/${i}.contigs.txt;done
+for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//'); do grep -F '>' ../spades//${file}/contigs.fasta | sed -e 's/_/ /g' | sort -nrk 6 | awk '$6>=2.0 && $4>=500 {print $0}' | sed -e 's/ /_/g' | sed -e 's/>//g' > ../spades/${file}.contigs.txt;done
 ```
 
 ```
-for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//'); do fastagrep.pl -f ../results/spades/${i}.contigs.txt ../results/spades/${i}/contigs.fasta > ../results/spades/${i}.HCov.contigs.fasta;done
+for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//'); do fastagrep.pl -f ../spades/${file}.contigs.txt ../spades/${file}/contigs.fasta > ../spades/${file}.HCov.contigs.fasta;done
 ```
 
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do grep -F '>' ../results/spades//${i}/contigs.fasta | sed -e 's/_/ /g' | sort -nrk 6 | awk '$6>=2.0 && $4>=500 {print $0}' | sed -e 's/ /_/g' | sed -e 's/>//g' > ../results/spades/${i}.contigs.txt;done
-```
+for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do grep -F '>' ../spades//${file}/contigs.fasta | sed -e 's/_/ /g' | sort -nrk 6 | awk '$6>=2.0 && $4>=500 {print $0}' | sed -e 's/ /_/g' | sed -e 's/>//g' > ../spades/${file}.contigs.txt;done
+
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do fastagrep.pl -f ../results/spades/${i}.contigs.txt ../results/spades/${i}/contigs.fasta > ../results/spades/${i}.HCov.contigs.fasta;done
+for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do fastagrep.pl -f ../spades/${file}.contigs.txt ../spades/${file}/contigs.fasta > ../spades/${file}.HCov.contigs.fasta;done
+```
+
 ```
 
 ## Control de ensamblaje
 
 ```
-for i in $(ls *_L001_R1_001.fastq.gz | sed 's/_L001_R1_001.fastq.gz//');do quast.py --circos --output-dir ../results/quast/${i}_ref -r ../reference/NC_011274.fasta -t 8 ../results/spades/${i}.HCov.contigs.fasta;done
+for i in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//');do quast.py --output-dir ../quast/${i}_ref -r ../../reference/NC_011274.fasta -t 8 ../spades/${i}.HCov.contigs.fasta;done
 ```
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do quast.py --circos --output-dir ../results/quast/${i}_ref -r ../reference/NC_011274.fasta -t 8 ../results/spades/${i}.HCov.contigs.fasta;done
+for i in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do quast.py --output-dir ../quast/${i}_ref -r ../../reference/NC_011274.fasta -t 8 ../spades/${i}.HCov.contigs.fasta;done
 ```
 
-### Crear imagen con CIRCOS
+### Anotar con PGAP
+
+Primero crearemos los archivos de configuración yaml:
 
 ```
-for i in $(ls *_1.fastq.gz | sed 's/_1.fastq.gz//'); do circos -conf ../results/quast/${i}_ref/circos.conf ;done
+cd trimmomatic
+for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//'); do touch ../pgap/$file.input.yaml && touch ../pgap/$file.submol.yaml; done
+```
+
+```
+for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do touch ../pgap/$file.input.yaml && touch ../pgap/$file.submol.yaml; done
+```
+
+Escribir en archivos submol.yaml
+```
+cd pgap
+for file in $(ls *.submol.yaml | sed 's/.submol.yaml//'); do echo -e "topology: 'circular'\nlocation: 'chromosome'\norganism:\n  genus_especies: 'Salmonella enterica'" > $id.submol.yaml; done
+```
+
+Escribir en archivos input.yaml
+```
+for file in $(ls *.submol.yaml | sed 's/.submol.yaml//'); do echo -e "fasta:\n  class: File\n  location: ../spades/$file.HCov.contigs.fasta\nsubmol:\n  class: File\n  location: $file.submol.yaml" > $file.input.yaml; done
+```
+
+Procedemos a anotar: 
+
+```
+cd pgap
+for file in $(ls *.submol.yaml | sed 's/.submol.yaml//'); do pgap.py -D singularity -r --no-internet -d  $file.input.yaml -o $file; done
 ```
