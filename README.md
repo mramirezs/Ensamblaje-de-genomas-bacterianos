@@ -239,7 +239,7 @@ for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do touch .
 Escribir en archivos submol.yaml
 ```
 cd pgap
-for file in $(ls *.submol.yaml | sed 's/.submol.yaml//'); do echo -e "topology: 'circular'\nlocation: 'chromosome'\norganism:\n  genus_especies: 'Salmonella enterica'" > $id.submol.yaml; done
+for file in $(ls *.submol.yaml | sed 's/.submol.yaml//'); do echo -e "topology: 'circular'\nlocation: 'chromosome'\norganism:\n  genus_species: 'Salmonella enterica'" > $id.submol.yaml; done
 ```
 
 Escribir en archivos input.yaml
