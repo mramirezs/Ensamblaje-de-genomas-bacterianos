@@ -205,18 +205,17 @@ for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fast
 
 ```
 for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do grep -F '>' ../spades//${file}/contigs.fasta | sed -e 's/_/ /g' | sort -nrk 6 | awk '$6>=2.0 && $4>=500 {print $0}' | sed -e 's/ /_/g' | sed -e 's/>//g' > ../spades/${file}.contigs.txt;done
-
+```
 
 ```
 for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do fastagrep.pl -f ../spades/${file}.contigs.txt ../spades/${file}/contigs.fasta > ../spades/${file}.HCov.contigs.fasta;done
 ```
 
-```
-
 ## Control de ensamblaje
 
 ```
-for i in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//');do quast.py --output-dir ../quast/${i}_ref -r ../../reference/NC_011274.fasta -t 8 ../spades/${i}.HCov.contigs.fasta;done
+cd trimmomatic
+for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//');do quast.py --output-dir ../quast/${i}_ref -r ../../reference/NC_011274.fasta -t 8 ../spades/${i}.HCov.contigs.fasta;done
 ```
 
 ```
@@ -237,14 +236,16 @@ for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do touch .
 ```
 
 Escribir en archivos submol.yaml
+
 ```
 cd pgap
-for file in $(ls *.submol.yaml | sed 's/.submol.yaml//'); do echo -e "topology: 'circular'\nlocation: 'chromosome'\norganism:\n  genus_species: 'Salmonella enterica'" > $id.submol.yaml; done
+for file in $(ls *.submol.yaml | sed 's/.submol.yaml//'); do echo -e "topology: 'circular'\nlocation: 'chromosome'\norganism:\n  genus_species: 'Salmonella enterica'" > $file.submol.yaml; done
 ```
 
 Escribir en archivos input.yaml
+
 ```
-for file in $(ls *.submol.yaml | sed 's/.submol.yaml//'); do echo -e "fasta:\n  class: File\n  location: ../spades/$file.HCov.contigs.fasta\nsubmol:\n  class: File\n  location: $file.submol.yaml" > $file.input.yaml; done
+for file in $(ls *.submol.yaml | sed 's/.submol.yaml//'); do echo -e "fasta:\n  class: File\n  location: $file.HCov.contigs.fasta\nsubmol:\n  class: File\n  location: $file.submol.yaml" > $file.input.yaml; done
 ```
 
 Procedemos a anotar: 
