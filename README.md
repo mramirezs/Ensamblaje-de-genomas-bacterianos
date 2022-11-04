@@ -171,7 +171,7 @@ for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do kraken2
 
 ```
 cd kraken2
-for file in $(ls *.kreport | sed 's/kreport//'); do cat ${file}.trimmed.kraken2 | cut -f 2,3 > ${file}.cut.trimmed.kraken2;done
+for file in $(ls *.kreport | sed 's/.kreport//'); do cat ${file}.trimmed.kraken2 | cut -f 2,3 > ${file}.cut.trimmed.kraken2;done
 ```
 
 #### Krona 
