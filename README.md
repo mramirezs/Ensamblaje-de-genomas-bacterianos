@@ -177,7 +177,7 @@ for file in $(ls *.kreport | sed 's/.kreport//'); do cat ${file}.trimmed.kraken2
 #### Krona 
 
 ```
-for file in $(ls *.kreport | sed 's/kreport//'); do ktImportTaxonomy -o ../krona/${file}.html ${file}.cut.trimmed.kraken2;done
+for file in $(ls *.kreport | sed 's/.kreport//'); do ktImportTaxonomy -o ../krona/${file}.html ${file}.cut.trimmed.kraken2;done
 ```
 
 ## Ensamblaje de genoma
