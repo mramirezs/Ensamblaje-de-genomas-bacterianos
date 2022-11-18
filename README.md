@@ -40,7 +40,7 @@ for file in $(cat sra_list.txt); do fastq-dump --split-files $file; done
 
 ```
 cd raw_data
-seqkit stat *.fastq.gz # Usando el comando seqkit
+seqkit stats *.fastq.gz # Usando el comando seqkit
 ```
 
 El resultado de esa linea de comandos es:
