@@ -215,11 +215,11 @@ for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do fastagr
 
 ```
 cd trimmomatic
-for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//');do quast.py --output-dir ../quast/${i}_ref -r ../../reference/NC_011274.fasta -t 8 ../spades/${i}.HCov.contigs.fasta;done
+for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fastq.gz//');do quast.py --output-dir ../quast/${file}_ref -r ../../reference/NC_011274.fasta -t 8 ../spades/${file}.HCov.contigs.fasta;done
 ```
 
 ```
-for i in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do quast.py --output-dir ../quast/${i}_ref -r ../../reference/NC_011274.fasta -t 8 ../spades/${i}.HCov.contigs.fasta;done
+for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do quast.py --output-dir ../quast/${file} -r ../../reference/NC_011274.fasta -t 8 ../spades/${file}.HCov.contigs.fasta;done
 ```
 
 ### Anotar con PGAP
