@@ -222,6 +222,13 @@ for file in $(ls *_L001_R1_001.paired.fastq.gz | sed 's/_L001_R1_001.paired.fast
 for file in $(ls *_1.paired.fastq.gz | sed 's/_1.paired.fastq.gz//'); do quast.py --output-dir ../quast/${file} -r ../../reference/NC_011274.fasta -t 8 ../spades/${file}.HCov.contigs.fasta;done
 ```
 
+### Reordenamiento de contigs 
+
+```
+cd spades
+for file in $(ls *.HCov.contigs.fasta | sed 's/.HCov.contigs.fasta//'); do CONTIGuator.py -r ../../reference/NC_011274.fasta -c ${file}.HCov.contigs.fasta -f ../contiguator/${file} -M -P -A; done
+```
+
 ### Anotar con PGAP
 
 Primero crearemos los archivos de configuración yaml:
