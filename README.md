@@ -47,16 +47,6 @@ El resultado de esa linea de comandos es:
 
 ```
 file                                      format  type   num_seqs      sum_len  min_len  avg_len  max_len
-171024112201-1-1_S3_L001_R1_001.fastq.gz  FASTQ   DNA     638,458  194,729,690      305      305      305
-171024112201-1-1_S3_L001_R2_001.fastq.gz  FASTQ   DNA     638,458  130,883,890      205      205      205
-171024112202-1-1_S4_L001_R1_001.fastq.gz  FASTQ   DNA     681,614  207,892,270      305      305      305
-171024112202-1-1_S4_L001_R2_001.fastq.gz  FASTQ   DNA     681,614  139,730,870      205      205      205
-171024112203-1-1_S5_L001_R1_001.fastq.gz  FASTQ   DNA     831,386  253,572,730      305      305      305
-171024112203-1-1_S5_L001_R2_001.fastq.gz  FASTQ   DNA     831,386  170,434,130      205      205      205
-171024112204-1-1_S6_L001_R1_001.fastq.gz  FASTQ   DNA     627,177  191,288,985      305      305      305
-171024112204-1-1_S6_L001_R2_001.fastq.gz  FASTQ   DNA     627,177  128,571,285      205      205      205
-171024112205-1-1_S7_L001_R1_001.fastq.gz  FASTQ   DNA     636,584  194,158,120      305      305      305
-171024112205-1-1_S7_L001_R2_001.fastq.gz  FASTQ   DNA     636,584  130,499,720      205      205      205
 SRR17885111_1.fastq.gz                    FASTQ   DNA     590,700  145,666,060       35    246.6      301
 SRR17885111_2.fastq.gz                    FASTQ   DNA     590,700  147,558,229       35    249.8      301
 SRR5155664_1.fastq.gz                     FASTQ   DNA     730,859  172,793,817       35    236.4      251
